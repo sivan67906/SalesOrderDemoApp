@@ -25,7 +25,7 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
             .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Quantity * src.UnitPrice));
 
-        CreateMap<CreateOrderItemDto, OrderItem>();
+        //CreateMap<CreateOrderItemDto, OrderItem>();
     }
 
     private static string GenerateOrderNumber()

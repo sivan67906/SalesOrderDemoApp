@@ -89,14 +89,14 @@ public static class MappingExtensions
         };
     }
 
-    public static OrderItem ToEntity(this CreateOrderItemDto createOrderItemDto)
-    {
-        return new OrderItem
-        {
-            ProductId = createOrderItemDto.ProductId,
-            Quantity = createOrderItemDto.Quantity
-        };
-    }
+    //public static OrderItem ToEntity(this CreateOrderItemDto createOrderItemDto)
+    //{
+    //    return new OrderItem
+    //    {
+    //        ProductId = createOrderItemDto.ProductId,
+    //        Quantity = createOrderItemDto.Quantity
+    //    };
+    //}
 
     // Helper method
     private static string GenerateOrderNumber()

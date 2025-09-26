@@ -16,8 +16,8 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         return await _dbSet.Where(p => p.StockQuantity > 0).ToListAsync();
     }
 
-    public async Task<Product?> GetProductByNameAsync(string name)
-    {
-        return await _dbSet.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower());
-    }
+    //public async Task<Product?> GetProductByNameAsync(string name)
+    //{
+    //    return await _dbSet.FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower());
+    //}
 }

@@ -27,12 +27,12 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .FirstOrDefaultAsync(o => o.Id == id);
     }
 
-    public async Task<IEnumerable<Order>> GetOrdersByCustomerAsync(string customerName)
-    {
-        return await _dbSet
-            .Where(o => o.CustomerName.Contains(customerName))
-            .Include(o => o.OrderItems)
-            .ThenInclude(oi => oi.Product)
-            .ToListAsync();
-    }
+    //public async Task<IEnumerable<Order>> GetOrdersByCustomerAsync(string customerName)
+    //{
+    //    return await _dbSet
+    //        .Where(o => o.CustomerName.Contains(customerName))
+    //        .Include(o => o.OrderItems)
+    //        .ThenInclude(oi => oi.Product)
+    //        .ToListAsync();
+    //}
 }

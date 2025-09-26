@@ -113,7 +113,7 @@ public class ApplicationDbContext : DbContext
             .HavePrecision(18, 2);
     }
 
-public DbSet<ProductOrderApp.Models.DTOs.ProductDto> ProductDto { get; set; } = default!;
+//public DbSet<ProductOrderApp.Models.DTOs.ProductDto> ProductDto { get; set; } = default!;
 
-public DbSet<ProductOrderApp.Models.DTOs.OrderDto> OrderDto { get; set; } = default!;
+//public DbSet<ProductOrderApp.Models.DTOs.OrderDto> OrderDto { get; set; } = default!;
 }

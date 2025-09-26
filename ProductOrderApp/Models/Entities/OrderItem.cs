@@ -4,6 +4,7 @@ namespace ProductOrderApp.Models.Entities;
 
 public class OrderItem
 {
+    [Key]
     public int Id { get; set; }
 
     [Required]
