@@ -1,0 +1,37 @@
+﻿@model ProductOrderApp.Models.DTOs.ProductDto
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<h1>Product Details</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Description)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Description)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Price)</dt>
+        <dd class="col-sm-9">$@Html.DisplayFor(model => model.Price)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.StockQuantity)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.StockQuantity)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CreatedDate)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedDate)</dd>
+
+        @if (Model.UpdatedDate != null)
+        {
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.UpdatedDate)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.UpdatedDate)</dd>
+        }
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

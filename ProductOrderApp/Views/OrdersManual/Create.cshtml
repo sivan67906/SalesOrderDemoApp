@@ -1,0 +1,162 @@
+﻿@model ProductOrderApp.Models.DTOs.CreateOrderDto
+
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h1>Create Order</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create" id="orderForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CustomerName" class="control-label"></label>
+                <input asp-for="CustomerName" class="form-control" />
+                <span asp-validation-for="CustomerName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CustomerEmail" class="control-label"></label>
+                <input asp-for="CustomerEmail" class="form-control" type="email" />
+                <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+            </div>
+
+            <h4>Order Items</h4>
+            <p class="text-muted small">Each product can only be added once per order.</p>
+            <div id="orderItems">
+                <div class="row mb-2 order-item">
+                    <div class="col-md-8">
+                        <select name="OrderItems[0].ProductId" class="form-control product-select" required>
+                            <option value="">-- Select Product --</option>
+                            @foreach (var product in ViewBag.Products as SelectList)
+                            {
+                                <option value="@product.Value">@product.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" name="OrderItems[0].Quantity" class="form-control" placeholder="Quantity" min="1" required />
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm remove-item" disabled>×</button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="addItem" class="btn btn-secondary mb-3">Add Another Item</button>
+
+            <div class="form-group">
+                <input type="submit" value="Create Order" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        let itemIndex = 1;
+
+        // Get all products for reference
+        const allProducts = [
+        @foreach (var product in ViewBag.Products as SelectList)
+        {
+            <text>{ value: '@product.Value', text: '@product.Text' },</text>
+        }
+        ];
+
+        document.getElementById('addItem').addEventListener('click', function() {
+            const container = document.getElementById('orderItems');
+            const newItem = `
+                <div class="row mb-2 order-item">
+                    <div class="col-md-8">
+                        <select name="OrderItems[${itemIndex}].ProductId" class="form-control product-select" required>
+                            <option value="">-- Select Product --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" name="OrderItems[${itemIndex}].Quantity" class="form-control" placeholder="Quantity" min="1" required />
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm remove-item">×</button>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', newItem);
+            itemIndex++;
+            updateAllDropdowns();
+            updateRemoveButtons();
+        });
+
+        document.getElementById('orderItems').addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-item')) {
+                e.target.closest('.order-item').remove();
+                updateAllDropdowns();
+                updateRemoveButtons();
+            }
+        });
+
+        // Update dropdowns when selection changes
+        document.getElementById('orderItems').addEventListener('change', function(e) {
+            if (e.target.classList.contains('product-select')) {
+                updateAllDropdowns();
+            }
+        });
+
+        function getSelectedProducts() {
+            const selects = document.querySelectorAll('.product-select');
+            const selected = [];
+            selects.forEach(select => {
+                if (select.value) {
+                    selected.push(select.value);
+                }
+            });
+            return selected;
+        }
+
+        function updateAllDropdowns() {
+            const selectedProducts = getSelectedProducts();
+            const selects = document.querySelectorAll('.product-select');
+
+            selects.forEach(select => {
+                const currentValue = select.value;
+
+                // Clear existing options
+                select.innerHTML = '<option value="">-- Select Product --</option>';
+
+                // Add available products
+                allProducts.forEach(product => {
+                    // Show product if it's not selected OR if it's the current selection
+                    if (!selectedProducts.includes(product.value) || product.value === currentValue) {
+                        const option = document.createElement('option');
+                        option.value = product.value;
+                        option.text = product.text;
+                        if (product.value === currentValue) {
+                            option.selected = true;
+                        }
+                        select.appendChild(option);
+                    }
+                });
+            });
+        }
+
+        function updateRemoveButtons() {
+            const items = document.querySelectorAll('.order-item');
+            items.forEach((item, index) => {
+                const removeBtn = item.querySelector('.remove-item');
+                removeBtn.disabled = items.length === 1;
+            });
+        }
+
+        // Initialize dropdowns on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAllDropdowns();
+        });
+    </script>
+}
