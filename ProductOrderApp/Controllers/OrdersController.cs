@@ -89,7 +89,72 @@ public class OrdersController : Controller
         ViewBag.Products = new SelectList(products, "Id", "Name");
         return View(createOrderDto);
     }
+    // GET: Orders/Edit/5
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
 
+        var order = await _orderRepository.GetOrderWithItemsByIdAsync(id.Value);
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        var products = await _productRepository.GetProductsInStockAsync();
+        ViewBag.Products = new SelectList(products, "Id", "Name");
+
+        var orderDto = _mapper.Map<OrderDto>(order);
+        return View(orderDto);
+    }
+
+    // POST: Orders/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, OrderDto orderDto)
+    {
+        if (id != orderDto.Id)
+        {
+            return NotFound();
+        }
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                var order = await _orderRepository.GetOrderWithItemsByIdAsync(id);
+                if (order == null)
+                {
+                    return NotFound();
+                }
+
+                // Update order properties
+                order.CustomerName = orderDto.CustomerName;
+                order.CustomerEmail = orderDto.CustomerEmail;
+                order.Status = orderDto.Status;
+
+                await _orderRepository.UpdateAsync(order);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                if (!await _orderRepository.ExistsAsync(orderDto.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        var products = await _productRepository.GetProductsInStockAsync();
+        ViewBag.Products = new SelectList(products, "Id", "Name");
+        return View(orderDto);
+    }
     // GET: Orders/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {

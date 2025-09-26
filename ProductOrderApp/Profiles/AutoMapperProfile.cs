@@ -13,11 +13,12 @@ public class AutoMapperProfile : Profile
         CreateMap<CreateProductDto, Product>()
             .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.UtcNow));
 
-        // Order mappings
+        // Order mappings - FIX: Ignore OrderItems to prevent duplication
         CreateMap<Order, OrderDto>().ReverseMap();
         CreateMap<CreateOrderDto, Order>()
             .ForMember(dest => dest.OrderNumber, opt => opt.MapFrom(src => GenerateOrderNumber()))
-            .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => DateTime.UtcNow));
+            .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.OrderItems, opt => opt.Ignore()); // Ignore OrderItems - handled manually in controller
 
         // OrderItem mappings
         CreateMap<OrderItem, OrderItemDto>()
